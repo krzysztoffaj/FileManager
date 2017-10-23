@@ -1,3 +1,4 @@
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -5,16 +6,11 @@ import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Controller extends FileManager {
-//    private String extension;
+public class MainController extends FileManager {
 
     @FXML
     private TextField extension;
@@ -45,7 +41,7 @@ public class Controller extends FileManager {
     @FXML
     private RadioButton copyAndPaste;
     @FXML
-    private ChoiceBox<String> doIfFileExists;
+    private ComboBox<String> doIfFileExists;
     @FXML
     private ListView<String> filesFound;
     @FXML
@@ -55,18 +51,7 @@ public class Controller extends FileManager {
     @FXML
     private Alert alert;
 
-    private FileManager fileManager = new FileManager();
-
-    @FXML
-    private void getOverallSize() {
-        File file;
-        double overallSize = 0;
-        for (String filePath : filesFound.getItems()) {
-            file = new File(filePath);
-            overallSize += file.length() / (1024*1024);
-        }
-        overallSizeField.setText(String.valueOf(overallSize));
-    }
+    private ProgressController progressController;
 
     @FXML
     private String getExtension() {
@@ -88,7 +73,18 @@ public class Controller extends FileManager {
     }
 
     @FXML
-    protected void loadFilesList() throws IOException {
+    private void getOverallSize() {
+        File file;
+        double overallSize = 0;
+        for (String filePath : filesFound.getItems()) {
+            file = new File(filePath);
+            overallSize += file.length() / (1024 * 1024);
+        }
+        overallSizeField.setText(String.valueOf(overallSize));
+    }
+
+    @FXML
+    private void loadFilesList() throws IOException {
         String formattedExtension = getExtension();
 
         if (formattedExtension == null) {
@@ -99,6 +95,7 @@ public class Controller extends FileManager {
         extensions[0] = formattedExtension;
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setInitialDirectory(new File("/media/fajek/Gry, filmy i reszta dysku/Muzyka/Buckethead/"));
         File selectedDirectory = directoryChooser.showDialog(null);
 
         if (selectedDirectory != null) {
@@ -110,5 +107,23 @@ public class Controller extends FileManager {
         } else {
             return;
         }
+    }
+
+    @FXML
+    private void initializeComboBox() {
+        List<String> operations = new ArrayList<>();
+        operations.add("Replace file");
+        operations.add("Skip file");
+        operations.add("Keep both files");
+        ObservableList operationsIfFileExists = FXCollections.observableList(operations);
+        doIfFileExists.setItems(operationsIfFileExists);
+    }
+
+    @FXML
+    private void cutFiles() throws IOException {
+        String source = filesFound.getItems().get(0);
+//        String destination = "/home/fajek/Desktop/";
+//        cutFile(source, destination);
+        createAlbumDirectoryInFilesLocation(source);
     }
 }
