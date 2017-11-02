@@ -17,25 +17,25 @@ public class MainController extends FileManager {
     @FXML
     private Button lookForFiles;
     @FXML
-    private ToggleGroup outputDirectoryButtonsGroup;
+    private ToggleGroup destinationDirectoryButtonsGroup;
     @FXML
-    private RadioButton outputDirectoryPathButton;
+    private RadioButton setDestinationDirectoryButton;
     @FXML
-    private TextField outputDirectoryPath;
+    private TextField setDestinationDirectory;
     @FXML
-    private Button outputDirectoryPathBrowse;
+    private Button destinationDirectoryBrowser;
     @FXML
-    private RadioButton outputDirectoryCreateFolderButton;
+    private RadioButton createDirectoryInCurrentLocationButton;
     @FXML
-    private Button outputDirectoryCreateFolderHelp;
+    private Button createDirectoryInCurrentLocationHelp;
     @FXML
-    private RadioButton outputDirectoryCreateTwoFoldersButton;
+    private RadioButton createTwoDirectoriesInSetLocationButton;
     @FXML
-    private TextField outputDirectoryCreateTwoFoldersPath;
+    private TextField locationToCreateTwoDirectories;
     @FXML
-    private Button outputDirectoryCreateTwoFoldersBrowse;
+    private Button createTwoDirectoriesInSetLocationBrowser;
     @FXML
-    private Button outputDirectoryCreateTwoFoldersHelp;
+    private Button createTwoDirectoriesInSetLocationHelp;
     @FXML
     private RadioButton cut;
     @FXML
@@ -48,17 +48,15 @@ public class MainController extends FileManager {
     private TextField overallSizeField;
     @FXML
     private Button performOperation;
-    @FXML
-    private Alert alert;
 
     private ProgressController progressController;
 
     @FXML
     private String getExtension() {
+        Alert alert;
         if (extension.getText().isEmpty()) {
             alert = new Alert(Alert.AlertType.NONE, "Please enter filename extension", ButtonType.OK);
             alert.showAndWait();
-
             return null;
         } else {
             if (isAlphaNumeric(extension.getText())) {
@@ -66,10 +64,20 @@ public class MainController extends FileManager {
             } else {
                 alert = new Alert(Alert.AlertType.NONE, "Filename extension has to be alphanumeric", ButtonType.OK);
                 alert.showAndWait();
-
                 return null;
             }
         }
+    }
+
+    @FXML
+    private String getDestinationDirectory(TextField destinationDirectory) {
+        Alert alert;
+        if (destinationDirectory.getText().isEmpty()) {
+            alert = new Alert(Alert.AlertType.NONE, "Please enter filename extension", ButtonType.OK);
+            alert.showAndWait();
+            return null;
+        }
+        return null;
     }
 
     @FXML
@@ -94,9 +102,9 @@ public class MainController extends FileManager {
         String[] extensions = new String[]{formattedExtension};
         extensions[0] = formattedExtension;
 
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("/media/fajek/Gry, filmy i reszta dysku/Muzyka/Buckethead/"));
-        File selectedDirectory = directoryChooser.showDialog(null);
+        DirectoryChooser sourceDirectory = new DirectoryChooser();
+        sourceDirectory.setInitialDirectory(new File("/media/fajek/Gry, filmy i reszta dysku/Muzyka/"));
+        File selectedDirectory = sourceDirectory.showDialog(null);
 
         if (selectedDirectory != null) {
             List<File> files = (List<File>) FileUtils.listFiles(selectedDirectory, extensions, true);
@@ -121,9 +129,18 @@ public class MainController extends FileManager {
 
     @FXML
     private void cutFiles() throws IOException {
-        String source = filesFound.getItems().get(0);
+        for (String sourceFile : filesFound.getItems()) {
+            cutFile(sourceFile, "/home/fajek/Desktop/");
+        }
+//        String source = filesFound.getItems().get(0);
+//        DirectoryChooser destinationDirectory = new DirectoryChooser();
 //        String destination = "/home/fajek/Desktop/";
 //        cutFile(source, destination);
-        createAlbumDirectoryInFilesLocation(source);
+//        createAlbumDirectoryInFilesLocation(source);
+    }
+
+    @FXML
+    private void setOutputDirectoryPath() {
+
     }
 }
