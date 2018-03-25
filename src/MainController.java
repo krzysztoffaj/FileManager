@@ -1,17 +1,27 @@
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class MainController extends FileManager {
-
+    @FXML
+    private Button listCleaner;
     @FXML
     private TextField extension;
     @FXML
@@ -49,7 +59,10 @@ public class MainController extends FileManager {
     @FXML
     private Button performOperation;
 
-    private ProgressController progressController;
+    @FXML
+    private void clearList() {
+        filesFound.getItems().clear();
+    }
 
     @FXML
     private String getExtension() {
@@ -93,28 +106,54 @@ public class MainController extends FileManager {
 
     @FXML
     private void loadFilesList() throws IOException {
-        String formattedExtension = getExtension();
 
+        String formattedExtension = getExtension();
         if (formattedExtension == null) {
             return;
         }
-
         String[] extensions = new String[]{formattedExtension};
         extensions[0] = formattedExtension;
 
         DirectoryChooser sourceDirectory = new DirectoryChooser();
+        // TO DO: REMOVE THE HARDCODE !!!
         sourceDirectory.setInitialDirectory(new File("/media/fajek/Gry, filmy i reszta dysku/Muzyka/"));
         File selectedDirectory = sourceDirectory.showDialog(null);
 
-        if (selectedDirectory != null) {
-            List<File> files = (List<File>) FileUtils.listFiles(selectedDirectory, extensions, true);
-            for (File file : files) {
-                filesFound.getItems().add(file.getPath());
-            }
-            getOverallSize();
-        } else {
-            return;
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource("ProgressInSearchingStage.fxml"));
+        Pane showProgress = null;
+        try {
+            showProgress = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Stage progressStage = new Stage();
+        progressStage.setTitle("Searching");
+        progressStage.initModality(Modality.APPLICATION_MODAL);
+        Scene scene = new Scene(showProgress);
+        progressStage.setScene(scene);
+        progressStage.show();
+
+        Task<Void> searchForFiles = new Task<Void>() {
+            @Override
+            public Void call() {
+                if (selectedDirectory != null) {
+                    List<File> files = (List<File>) FileUtils.listFiles(selectedDirectory, extensions, true);
+                    for (File file : files) {
+                        filesFound.getItems().add(file.getPath());
+                    }
+                    getOverallSize();
+                } else {
+                    return null;
+                }
+                Platform.runLater(
+                        progressStage::close
+                );
+                return null;
+            }
+        };
+        Thread searchingForFiles = new Thread(searchForFiles, "Searching for files");
+        searchingForFiles.start();
     }
 
     @FXML
@@ -130,6 +169,7 @@ public class MainController extends FileManager {
     @FXML
     private void cutFiles() throws IOException {
         for (String sourceFile : filesFound.getItems()) {
+            // TO DO: REMOVE THE HARDCODE!!!
             cutFile(sourceFile, "/home/fajek/Desktop/");
         }
 //        String source = filesFound.getItems().get(0);

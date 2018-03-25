@@ -64,5 +64,6 @@
       </Text>
       <Text layoutX="880.0" layoutY="528.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Overall size of listed files [MB]:" />
       <TextField fx:id="overallSizeField" editable="false" layoutX="1085.0" layoutY="510.0" prefHeight="26.0" prefWidth="90.0" />
+      <Button fx:id="listCleaner" layoutX="1099.0" layoutY="47.0" mnemonicParsing="false" onAction="#clearList" text="Clear list" />
    </children>
 </Pane>
