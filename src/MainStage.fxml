@@ -20,50 +20,54 @@
       </Text>
       <TextField fx:id="extension" layoutX="200.0" layoutY="55.0" prefHeight="26.0" prefWidth="92.0" text="mp3" />
       <Button fx:id="lookForFiles" layoutX="140.0" layoutY="95.0" mnemonicParsing="false" onAction="#loadFilesList" text="Look for files in..." />
+
       <Text layoutX="45.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output directory:">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <RadioButton fx:id="createDirectoryInCurrentLocationButton" layoutX="45.0" layoutY="220.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="268.0" text="  Create a directory in file's location">
+      <RadioButton fx:id="setDestinationDirectoryButton" layoutX="45.0" layoutY="185.0" mnemonicParsing="false">
          <toggleGroup>
             <ToggleGroup fx:id="outputDirectoryButtonsGroup" />
          </toggleGroup></RadioButton>
-      <RadioButton fx:id="setDestinationDirectoryButton" layoutX="45.0" layoutY="185.0" mnemonicParsing="false">
-         <toggleGroup>
-            <ToggleGroup fx:id="destinationDirectoryButtonsGroup" />
-         </toggleGroup></RadioButton>
-      <TextField fx:id="setDestinationDirectory" editable="false" layoutX="76.0" layoutY="181.0" prefHeight="26.0" prefWidth="186.0" />
-      <Button fx:id="destinationDirectoryBrowser" layoutX="277.0" layoutY="181.0" mnemonicParsing="false" text="Browse..." />
+        <TextField fx:id="setDestinationDirectory" editable="false" layoutX="76.0" layoutY="181.0" prefHeight="26.0" prefWidth="186.0" />
+        <Button fx:id="destinationDirectoryBrowser" layoutX="277.0" layoutY="181.0" mnemonicParsing="false" text="Browse..." />
+      <RadioButton fx:id="createDirectoryInCurrentLocationButton" layoutX="45.0" layoutY="220.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="268.0" text="  Create a directory in file's location" toggleGroup="$outputDirectoryButtonsGroup" />
+        <Button fx:id="createDirectoryInCurrentLocationHelp" layoutX="375.0" layoutY="216.0" mnemonicParsing="false" text="?" />
+      <RadioButton fx:id="createTwoDirectoriesInSetLocationButton" layoutX="44.0" layoutY="255.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="320.0" text="  Create two directories in following location:" toggleGroup="$outputDirectoryButtonsGroup" />
+        <TextField fx:id="locationToCreateTwoDirectories" editable="false" layoutX="76.0" layoutY="280.0" prefHeight="26.0" prefWidth="186.0" />
+        <Button fx:id="createTwoDirectoriesInSetLocationBrowser" layoutX="277.0" layoutY="280.0" mnemonicParsing="false" text="Browse..." />
+        <Button fx:id="createTwoDirectoriesInSetLocationHelp" layoutX="375.0" layoutY="259.0" mnemonicParsing="false" text="?" />
+
       <Text layoutX="45.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select an operation:">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <RadioButton fx:id="copyAndPaste" layoutX="45.0" layoutY="410.0" mnemonicParsing="false" text="Copy and paste" />
-      <RadioButton fx:id="cut" layoutX="45.0" layoutY="375.0" mnemonicParsing="false" text="Cut" />
       <Text layoutX="45.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" text="If the file already exists in selected location:">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
       <ComboBox fx:id="doIfFileExists" layoutX="45.0" layoutY="508.0" onShown="#initializeComboBox" prefHeight="26.0" prefWidth="310.0" />
-      <Button fx:id="performOperation" layoutX="506.0" layoutY="580.0" mnemonicParsing="false" onAction="#cutFiles" text="Perform operation">
-         <font>
-            <Font size="18.0" />
-         </font></Button>
-      <RadioButton fx:id="createTwoDirectoriesInSetLocationButton" layoutX="44.0" layoutY="255.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="320.0" text="  Create two directories in following location:" toggleGroup="$outputDirectoryButtonsGroup" />
-      <TextField fx:id="locationToCreateTwoDirectories" editable="false" layoutX="76.0" layoutY="280.0" prefHeight="26.0" prefWidth="186.0" />
-      <Button fx:id="createTwoDirectoriesInSetLocationBrowser" layoutX="277.0" layoutY="280.0" mnemonicParsing="false" text="Browse..." />
-      <Button fx:id="createTwoDirectoriesInSetLocationHelp" layoutX="375.0" layoutY="259.0" mnemonicParsing="false" text="?" />
-      <Button fx:id="createDirectoryInCurrentLocationHelp" layoutX="375.0" layoutY="216.0" mnemonicParsing="false" text="?" />
+
       <Text layoutX="425.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Files found:">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
+      <RadioButton fx:id="copyAndPaste" layoutX="45.0" layoutY="410.0" mnemonicParsing="false" text="Copy and paste">
+         <toggleGroup>
+            <ToggleGroup fx:id="operationToggle" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="cut" layoutX="45.0" layoutY="375.0" mnemonicParsing="false" text="Cut" toggleGroup="$operationToggle" />
       <Text layoutX="880.0" layoutY="528.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Overall size of listed files [MB]:" />
       <TextField fx:id="overallSizeField" editable="false" layoutX="1085.0" layoutY="510.0" prefHeight="26.0" prefWidth="90.0" />
       <Button fx:id="listCleaner" layoutX="1099.0" layoutY="47.0" mnemonicParsing="false" onAction="#clearList" text="Clear list" />
+       <Button fx:id="performOperation" layoutX="506.0" layoutY="580.0" mnemonicParsing="false" onAction="#cutFiles" text="Perform operation">
+           <font>
+               <Font size="18.0" />
+           </font>
+       </Button>
    </children>
 </Pane>

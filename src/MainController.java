@@ -47,6 +47,8 @@ public class MainController extends FileManager {
     @FXML
     private Button createTwoDirectoriesInSetLocationHelp;
     @FXML
+    private ToggleGroup operationButtonsGroup;
+    @FXML
     private RadioButton cut;
     @FXML
     private RadioButton copyAndPaste;
@@ -106,7 +108,6 @@ public class MainController extends FileManager {
 
     @FXML
     private void loadFilesList() throws IOException {
-
         String formattedExtension = getExtension();
         if (formattedExtension == null) {
             return;
@@ -172,11 +173,6 @@ public class MainController extends FileManager {
             // TO DO: REMOVE THE HARDCODE!!!
             cutFile(sourceFile, "/home/fajek/Desktop/");
         }
-//        String source = filesFound.getItems().get(0);
-//        DirectoryChooser destinationDirectory = new DirectoryChooser();
-//        String destination = "/home/fajek/Desktop/";
-//        cutFile(source, destination);
-//        createAlbumDirectoryInFilesLocation(source);
     }
 
     @FXML
