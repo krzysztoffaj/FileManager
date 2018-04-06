@@ -85,13 +85,9 @@ public class FileManager {
     }
 
     protected void cutFile(String sourcePath, String upstreamDestinationPath) throws IOException {
-        String destinationPath = getDestinationPath(sourcePath, upstreamDestinationPath);
-        System.out.println(destinationPath);
         File sourceFile = new File(sourcePath);
-        File destinationFile = new File(destinationPath);
+        File destinationFile = new File(getDestinationPath(sourcePath, upstreamDestinationPath));
 
-
-//        FileUtils.copyFile(sourceFile, destinationFile);
         if(destinationFile.exists())
             destinationFile.delete();
 
@@ -100,7 +96,7 @@ public class FileManager {
 
     protected void copyAndPasteFile(String sourcePath, String destinationPath) throws IOException {
         File sourceFile = new File(sourcePath);
-        File destinationFile = new File(destinationPath);
+        File destinationFile = new File(destinationPath + getSongName(sourcePath));
 
         FileUtils.copyFile(sourceFile, destinationFile);
     }

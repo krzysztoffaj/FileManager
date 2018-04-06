@@ -1,23 +1,28 @@
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 public class MainController extends FileManager {
     @FXML
@@ -120,20 +125,7 @@ public class MainController extends FileManager {
         sourceDirectory.setInitialDirectory(new File("/media/fajek/Gry, filmy i reszta dysku/Muzyka/"));
         File selectedDirectory = sourceDirectory.showDialog(null);
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("ProgressInSearchingStage.fxml"));
-        Pane showProgress = null;
-        try {
-            showProgress = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Stage progressStage = new Stage();
-        progressStage.setTitle("Searching");
-        progressStage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(showProgress);
-        progressStage.setScene(scene);
-        progressStage.show();
+        Stage progressStage = ProgressStagesSetter.progressInSearching();
 
         Task<Void> searchForFiles = new Task<Void>() {
             @Override
@@ -147,13 +139,16 @@ public class MainController extends FileManager {
                 } else {
                     return null;
                 }
-                Platform.runLater(
-                        progressStage::close
-                );
+//                Platform.runLater(
+//                        progressStage::close
+//                );
                 return null;
             }
         };
+
+        searchForFiles.setOnSucceeded(event -> progressStage.close());
         Thread searchingForFiles = new Thread(searchForFiles, "Searching for files");
+
         searchingForFiles.start();
     }
 
@@ -176,7 +171,53 @@ public class MainController extends FileManager {
     }
 
     @FXML
+    private void copyAndPasteFiles() throws IOException {
+        for (String sourceFile : filesFound.getItems()) {
+            // TO DO: REMOVE THE HARDCODE!!!
+            copyAndPasteFile(sourceFile, "/home/fajek/Desktop/");
+        }
+    }
+
+    @FXML
     private void setOutputDirectoryPath() {
 
+    }
+
+    @FXML
+    private void performOperation() throws IOException {
+//        RadioButton operation = (RadioButton) operationButtonsGroup.getSelectedToggle();
+//        if (operation == null) {
+//            Alert alert = new Alert(Alert.AlertType.NONE, "Please select an operation", ButtonType.OK);
+//            alert.showAndWait();
+//            return;
+//        }
+//        String selectedOperation = operation.getText();
+//        if (selectedOperation.equals("Cut")) {
+//            cutFiles();
+//        } else if (selectedOperation.equals("Copy and paste")) {
+//            copyAndPasteFiles();
+//        }
+
+        Task performOperation = new Task<Void>() {
+            @Override
+            public Void call() throws InterruptedException, IOException {
+                int i = 1;
+                for (String sourceFile : filesFound.getItems()) {
+                    // TO DO: REMOVE THE HARDCODE!!!
+                    copyAndPasteFile(sourceFile, "/home/fajek/Desktop/");
+                    updateProgress(i, filesFound.getItems().size());
+                    updateMessage(sourceFile.substring(sourceFile.lastIndexOf("/") + 1));
+                    i++;
+                }
+                return null;
+            }
+        };
+
+        Stage progressStage = ProgressStagesSetter.progressInManagingFiles(performOperation);
+
+        performOperation.setOnSucceeded(event -> progressStage.close());
+
+        Thread managingFiles = new Thread(performOperation, "Managing files");
+        managingFiles.start();
     }
 }
