@@ -122,7 +122,7 @@ public class MainController extends FileManager {
 
         DirectoryChooser sourceDirectory = new DirectoryChooser();
         // TO DO: REMOVE THE HARDCODE !!!
-        sourceDirectory.setInitialDirectory(new File("/media/fajek/Gry, filmy i reszta dysku/Muzyka/"));
+        sourceDirectory.setInitialDirectory(new File("/media/fajek/Music and other stuff/Muzyka/"));
         File selectedDirectory = sourceDirectory.showDialog(null);
 
         Stage progressStage = ProgressStagesSetter.progressInSearching();
@@ -204,7 +204,8 @@ public class MainController extends FileManager {
                 int i = 1;
                 for (String sourceFile : filesFound.getItems()) {
                     // TO DO: REMOVE THE HARDCODE!!!
-                    copyAndPasteFile(sourceFile, "/home/fajek/Desktop/");
+                    copyAndPasteFile(sourceFile, "/media/fajek/Windows/TEMPORARILY MOVED/");
+//                    cutFile(sourceFile, "/media/fajek/Windows/TEMPORARILY MOVED/");
                     updateProgress(i, filesFound.getItems().size());
                     updateMessage(sourceFile.substring(sourceFile.lastIndexOf("/") + 1));
                     i++;
@@ -214,7 +215,6 @@ public class MainController extends FileManager {
         };
 
         Stage progressStage = ProgressStagesSetter.progressInManagingFiles(performOperation);
-
         performOperation.setOnSucceeded(event -> progressStage.close());
 
         Thread managingFiles = new Thread(performOperation, "Managing files");

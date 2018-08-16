@@ -1,13 +1,8 @@
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
-import javafx.scene.control.TextField;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by fajek on 8/10/17.
@@ -94,9 +89,9 @@ public class FileManager {
         FileUtils.moveFile(sourceFile, destinationFile);
     }
 
-    protected void copyAndPasteFile(String sourcePath, String destinationPath) throws IOException {
+    protected void copyAndPasteFile(String sourcePath, String upstreamDestinationPath) throws IOException {
         File sourceFile = new File(sourcePath);
-        File destinationFile = new File(destinationPath + getSongName(sourcePath));
+        File destinationFile = new File(getDestinationPath(sourcePath, upstreamDestinationPath));
 
         FileUtils.copyFile(sourceFile, destinationFile);
     }
